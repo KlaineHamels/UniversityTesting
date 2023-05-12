@@ -11,6 +11,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 public class testUI {
 
         private WebDriver driver;
@@ -37,12 +39,12 @@ public class testUI {
         public void pageTest() {
             driver.get("https://playground.learnqa.ru/puzzle/triangle");
             List<WebElement> elements1 = driver.findElements(By.id("show_answ"));
-            assert(elements1.size() > 0);
+            assertTrue(elements1.size() > 0);
             driver.findElement(By.id("show_answ")).click();
             List<WebElement> elements2 = driver.findElements(By.linkText("Ссылка на ответы"));
-            assert(elements2.size() > 0);
+            assertTrue(elements2.size() > 0);
             List<WebElement> elements3 = driver.findElements(By.id("hide_answ"));
-            assert(elements3.size() > 0);
+            assertTrue(elements3.size() > 0);
         }
     }
 
