@@ -1,11 +1,13 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
 
 
 public class testRequests {
@@ -15,10 +17,15 @@ public class testRequests {
 
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
 
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("id", 11);
+        requestBody.put("name","doggie");
+        requestBody.put("status"," ");
+
         Response response = given()
                 .header("Content-type", "application/json")
                 .and()
-                .body(requestBodyPost)
+                .body(requestBody.toString())
                 .when()
                 .post("/pet")
                 .then()
@@ -31,44 +38,6 @@ public class testRequests {
     }
 
 
-    private static String requestBodyPost = "{\n" +
-            "  \"id\": 11,\n" +
-            "  \"category\": {\n" +
-            "    \"id\": 0,\n" +
-            "    \"name\": \"string\"\n" +
-            "  },\n" +
-            "  \"name\": \"doggie\",\n" +
-            "  \"photoUrls\": [\n" +
-            "    \"string\"\n" +
-            "  ],\n" +
-            "  \"tags\": [\n" +
-            "    {\n" +
-            "      \"id\": 0,\n" +
-            "      \"name\": \"string\"\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"status\": \"available\"\n" +
-            "}";
-
-
-    private static String requestBodyPut = "{\n" +
-            "    \"id\": 24,\n" +
-            "  \"category\": {\n" +
-            "    \"id\": 0,\n" +
-            "    \"name\": \"string\"\n" +
-            "  },\n" +
-            "  \"name\": \"catmeow\",\n" +
-            "  \"photoUrls\": [\n" +
-            "    \"string\"\n" +
-            "  ],\n" +
-            "  \"tags\": [\n" +
-            "    {\n" +
-            "      \"id\": 0,\n" +
-            "      \"name\": \"string\"\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"status\": \"available\"\n" +
-            "}";
 
     @Test
     public void testGet() {
@@ -79,24 +48,53 @@ public class testRequests {
                 .then()
                 .extract().response();
 
-        Assertions.assertEquals(200, response.statusCode());
-        Assertions.assertEquals("11", response.jsonPath().getString("id"));
+        assertEquals(200, response.statusCode());
+        assertEquals("11", response.jsonPath().getString("id"));
     }
 
     @Test
     public void testPut() {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("id", 24);
+        requestBody.put("name","catty");
+
         Response response = given()
                 .header("Content-type", "application/json")
                 .and()
-                .body(requestBodyPut)
+                .body(requestBody.toString())
                 .when()
-                .put("/pet")
+                .put("/pet6t")
                 .then()
                 .extract().response();
 
-        Assertions.assertEquals(200, response.statusCode());
-        Assertions.assertEquals("catmeow", response.jsonPath().getString("name"));
-        Assertions.assertEquals("24", response.jsonPath().getString("id"));
+        assertEquals(200, response.statusCode());
+        assertEquals("catty", response.jsonPath().getString("name"));
+        assertEquals("24", response.jsonPath().getString("id"));
     }
+
+    @Test
+    public void testInvalidId() {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/pet/25824двыаыавп%^$#%fcфывар")
+                .then()
+                .extract().response();
+
+        assertEquals(404, response.statusCode());
+    }
+
+    @Test
+    public void testLongId() {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/pet/2984928341342395420435902395028394718927401395")
+                .then()
+                .extract().response();
+
+        assertEquals(404, response.statusCode());
+    }
+
 
 }
