@@ -1,18 +1,19 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 
 public class testRequests {
 
-    @BeforeAll
+    @BeforeClass
     public static void setup() {
 
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
@@ -31,9 +32,9 @@ public class testRequests {
                 .then()
                 .extract().response();
 
-        Assertions.assertEquals(200, response.statusCode());
-        Assertions.assertEquals("11", response.jsonPath().getString("id"));
-        Assertions.assertEquals("doggie", response.jsonPath().getString("name"));
+        assertEquals(200, response.statusCode());
+        assertEquals("11", response.jsonPath().getString("id"));
+        assertEquals("doggie", response.jsonPath().getString("name"));
 
     }
 
@@ -55,21 +56,24 @@ public class testRequests {
     @Test
     public void testPut() {
         JSONObject requestBody = new JSONObject();
-        requestBody.put("id", 24);
+        requestBody.put("id", "11");
         requestBody.put("name","catty");
+
 
         Response response = given()
                 .header("Content-type", "application/json")
                 .and()
                 .body(requestBody.toString())
                 .when()
-                .put("/pet6t")
+                .put("/pet")
                 .then()
                 .extract().response();
 
+
+
         assertEquals(200, response.statusCode());
         assertEquals("catty", response.jsonPath().getString("name"));
-        assertEquals("24", response.jsonPath().getString("id"));
+        assertEquals("11", response.jsonPath().getString("id"));
     }
 
     @Test

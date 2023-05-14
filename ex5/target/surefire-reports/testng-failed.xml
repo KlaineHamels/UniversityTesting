@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [My test suite]" verbose="0">
+  <listeners>
+    <listener class-name="listener.Listener"/>
+  </listeners>
+  <test thread-count="5" name="numbersXML(failed)" verbose="0">
+    <parameter name="isEven" value="false"/>
+    <parameter name="value" value="1"/>
+    <classes>
+      <class name="UITest">
+        <methods>
+          <include name="setUp"/>
+          <include name="tearDown"/>
+          <include name="pageTest"/>
+        </methods>
+      </class> <!-- UITest -->
+    </classes>
+  </test> <!-- numbersXML(failed) -->
+</suite> <!-- Failed suite [My test suite] -->
